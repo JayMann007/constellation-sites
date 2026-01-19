@@ -1,0 +1,70 @@
+---
+type Provider = "cloudflare" | "youtube" | "vimeo";
+
+interface Props {
+  eyebrow?: string;
+  title: string;
+  blurb: string;
+  provider: Provider;
+  videoIdOrUrl: string;
+  layout?: "video-left" | "video-right" | "stacked";
+  cta?: { label: string; href: string };
+}
+
+const {
+  eyebrow,
+  title,
+  blurb,
+  provider,
+  videoIdOrUrl,
+  layout = "video-right",
+  cta
+} = Astro.props as Props;
+
+const isLeft = layout === "video-left";
+const isStacked = layout === "stacked";
+
+const videoEmbed =
+  provider === "cloudflare"
+    ? `https://iframe.videodelivery.net/${videoIdOrUrl}`
+    : provider === "youtube"
+      ? `https://www.youtube.com/embed/${videoIdOrUrl}`
+      : `https://player.vimeo.com/video/${videoIdOrUrl}`;
+---
+
+<section class="py-16">
+  <div class="mx-auto max-w-6xl px-6">
+    <div class={`grid gap-10 ${isStacked ? "" : "md:grid-cols-2"} items-center`}>
+      <div class={`${!isStacked && isLeft ? "md:order-2" : ""}`}>
+        {eyebrow && <div class="text-xs uppercase tracking-widest text-neutral-400">{eyebrow}</div>}
+        <h2 class="mt-3 text-3xl md:text-4xl font-semibold leading-tight">
+          {title}
+        </h2>
+        <p class="mt-4 text-lg text-neutral-300 leading-relaxed">
+          {blurb}
+        </p>
+
+        {cta && (
+          <a
+            href={cta.href}
+            class="inline-flex mt-7 items-center justify-center rounded-2xl border border-neutral-700 px-5 py-3 text-sm text-neutral-100 hover:border-neutral-500 transition"
+          >
+            {cta.label}
+          </a>
+        )}
+      </div>
+
+      <div class={`${!isStacked && isLeft ? "md:order-1" : ""}`}>
+        <div class="rounded-3xl border border-neutral-800 bg-neutral-900/30 p-2 shadow-lg">
+          <iframe
+            src={videoEmbed}
+            title={title}
+            allow="accelerometer; autoplay; encrypted-media; picture-in-picture"
+            allowfullscreen
+            class="w-full aspect-video rounded-2xl"
+          ></iframe>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,46 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import VideoSection from "../components/VideoSection.astro";
+import home from "../content/pages/home.json";
+
+const { seo, hero, sections } = home;
+---
+
+<BaseLayout title={seo.title} description={seo.description}>
+  <header class="border-b border-neutral-900">
+    <div class="mx-auto max-w-6xl px-6 py-16">
+      <div class="max-w-3xl">
+        <p class="text-xs uppercase tracking-widest text-neutral-400">37TRILLION.ORG</p>
+
+        <h1 class="mt-4 text-4xl md:text-6xl font-semibold leading-tight">
+          {hero.title}
+        </h1>
+
+        <p class="mt-6 text-lg md:text-xl text-neutral-300">
+          {hero.subtitle}
+        </p>
+
+        <a
+          href={hero.cta.href}
+          class="inline-flex mt-8 items-center justify-center rounded-2xl bg-white text-neutral-950 px-6 py-3 text-sm font-medium hover:opacity-90 transition"
+        >
+          {hero.cta.label}
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <div id="start"></div>
+
+  {sections.map((s) => (
+    <VideoSection
+      eyebrow={s.eyebrow}
+      title={s.title}
+      blurb={s.blurb}
+      provider={s.provider}
+      videoIdOrUrl={s.videoIdOrUrl}
+      layout={s.layout}
+      cta={s.cta}
+    />
+  ))}
+</BaseLayout>

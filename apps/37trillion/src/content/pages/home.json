@@ -1,0 +1,40 @@
+{
+  "seo": {
+    "title": "37 Trillion — The Community of One",
+    "description": "A video-first introduction to the Community of One: 37 trillion cells, one pilot."
+  },
+  "hero": {
+    "title": "You are a Community of One.",
+    "subtitle": "37 trillion cells. One pilot. A modern way to understand stewardship, measurement, and purpose.",
+    "cta": { "label": "Start here", "href": "#start" }
+  },
+  "sections": [
+    {
+      "eyebrow": "FOUNDATION",
+      "title": "The 37 Trillion",
+      "blurb": "You are a living civilization. The work is learning the truth of it—and becoming a better pilot of it.",
+      "provider": "cloudflare",
+      "videoIdOrUrl": "32d9a78d7cb82f1d853e7b3241e3feca",
+      "layout": "video-right",
+      "cta": { "label": "Unity of One", "href": "https://unityofone.org" }
+    },
+    {
+      "eyebrow": "METHOD",
+      "title": "Measure What Matters",
+      "blurb": "Multi-omic measurement turns vague wellness into navigable signals—so progress becomes visible and repeatable.",
+      "provider": "cloudflare",
+      "videoIdOrUrl": "776e9e0faf4a1d190a744ab6bf66a223",
+      "layout": "video-left",
+      "cta": { "label": "LightOS", "href": "https://lightos.app" }
+    },
+    {
+      "eyebrow": "MISSION",
+      "title": "144 Pilots",
+      "blurb": "A mentorship ecosystem where real tools and real examples help people discover who they were created to be—and serve from that truth.",
+      "provider": "cloudflare",
+      "videoIdOrUrl": "9493e108345f0c5bb565fffca7300541",
+      "layout": "video-right",
+      "cta": { "label": "The GLC", "href": "https://theglc.us" }
+    }
+  ]
+}

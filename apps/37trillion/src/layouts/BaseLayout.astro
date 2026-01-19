@@ -1,0 +1,21 @@
+---
+import "../styles/global.css";
+
+const { title = "37 Trillion", description = "Community of One" } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description} />
+    <title>{title}</title>
+  </head>
+
+  <body class="bg-neutral-950 text-neutral-100 antialiased">
+    <main class="min-h-screen">
+      <slot />
+    </main>
+  </body>
+</html>
