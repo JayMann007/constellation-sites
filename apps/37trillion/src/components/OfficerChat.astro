@@ -1,5 +1,6 @@
 ---
 // src/components/OfficerChat.astro
+// This URL points to your specific Cloudflare Worker
 const OFFICER_API_URL = "https://officer-api.joseph-1ad.workers.dev";
 ---
 
@@ -113,8 +114,11 @@ const OFFICER_API_URL = "https://officer-api.joseph-1ad.workers.dev";
 
       if (data.response) {
         addMessage(data.response, false);
+      } else if (data.error) {
+        // --- ERROR REVEAL LOGIC ---
+        addMessage("SYSTEM ERROR: " + data.error, false);
       } else {
-        addMessage("Signal interference. Please retry.", false);
+        addMessage("Signal interference. Empty response received.", false);
       }
 
     } catch (err) {
