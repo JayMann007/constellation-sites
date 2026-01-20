@@ -1,4 +1,5 @@
 ---
+import OfficerChat from '../components/OfficerChat.astro';
 import "../styles/global.css";
 
 const { title = "37 Trillion", description = "Community of One" } = Astro.props;
@@ -17,5 +18,6 @@ const { title = "37 Trillion", description = "Community of One" } = Astro.props;
     <main class="min-h-screen">
       <slot />
     </main>
+	<OfficerChat />
   </body>
 </html>

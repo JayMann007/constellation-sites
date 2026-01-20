@@ -1,0 +1,135 @@
+---
+// src/components/OfficerChat.astro
+const OFFICER_API_URL = "https://officer-api.joseph-1ad.workers.dev";
+---
+
+<div id="officer-interface" class="fixed bottom-6 right-6 z-50 flex flex-col items-end font-sans">
+  
+  <div id="chat-window" class="hidden bg-neutral-900 border border-neutral-700 rounded-2xl shadow-2xl w-80 sm:w-96 mb-4 overflow-hidden flex flex-col h-[500px] transition-all duration-300">
+    
+    <div class="bg-black p-4 border-b border-neutral-800 flex justify-between items-center">
+      <div class="flex items-center gap-3">
+        <div id="avatar-container" class="relative w-8 h-8 rounded-full bg-cyan-900 flex items-center justify-center">
+          <div id="avatar-pulse" class="absolute inset-0 rounded-full bg-cyan-500 opacity-0"></div>
+          <span class="relative z-10 text-cyan-200 text-xs font-bold tracking-tighter">37T</span>
+        </div>
+        <div>
+          <span class="text-neutral-200 font-bold text-sm tracking-wide block">Mya | Unity of One</span>
+          <span class="text-neutral-500 text-[10px] uppercase tracking-wider block">Pilot Mentor</span>
+        </div>
+      </div>
+      <button id="close-btn" class="text-neutral-500 hover:text-white transition text-xl">&times;</button>
+    </div>
+
+    <div id="messages" class="flex-1 overflow-y-auto p-4 space-y-4 bg-neutral-900 scroll-smooth">
+      <div class="text-neutral-600 text-[10px] text-center uppercase tracking-widest mt-2 mb-4">System Online</div>
+      
+      <div class="flex justify-start animate-fade-in">
+        <div class="bg-neutral-800 text-neutral-300 rounded-2xl rounded-tl-none px-4 py-3 text-sm max-w-[85%] shadow-sm">
+          Greetings, Pilot. I am Mya. How can I assist your navigation today?
+        </div>
+      </div>
+    </div>
+
+    <form id="chat-form" class="p-3 bg-black border-t border-neutral-800 flex gap-2">
+      <input 
+        type="text" 
+        id="user-input" 
+        class="flex-1 bg-neutral-900 text-white text-sm rounded-full px-4 py-2 focus:outline-none focus:ring-1 focus:ring-cyan-500 placeholder-neutral-600 border border-neutral-800"
+        placeholder="Enter query..."
+        autocomplete="off"
+      />
+      <button type="submit" class="bg-cyan-700 hover:bg-cyan-600 text-white rounded-full p-2 transition shadow-lg disabled:opacity-50 disabled:cursor-not-allowed">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+          <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-8.707l-3-3a1 1 0 00-1.414 0l-3 3a1 1 0 001.414 1.414L9 9.414V13a1 1 0 102 0V9.414l1.293 1.293a1 1 0 001.414-1.414z" clip-rule="evenodd" />
+        </svg>
+      </button>
+    </form>
+  </div>
+
+  <button id="toggle-btn" class="bg-cyan-600 hover:bg-cyan-500 text-white rounded-full p-4 shadow-lg transition-transform hover:scale-105 border border-cyan-400/30">
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+    </svg>
+  </button>
+
+</div>
+
+<script define:vars={{ OFFICER_API_URL }}>
+  const toggleBtn = document.getElementById('toggle-btn');
+  const closeBtn = document.getElementById('close-btn');
+  const chatWindow = document.getElementById('chat-window');
+  const chatForm = document.getElementById('chat-form');
+  const userInput = document.getElementById('user-input');
+  const messages = document.getElementById('messages');
+  const avatarPulse = document.getElementById('avatar-pulse');
+  const submitBtn = chatForm.querySelector('button');
+
+  let threadId = sessionStorage.getItem('mya_thread_id') || null;
+
+  const toggleChat = () => chatWindow.classList.toggle('hidden');
+  toggleBtn.addEventListener('click', toggleChat);
+  closeBtn.addEventListener('click', toggleChat);
+
+  const scrollToBottom = () => messages.scrollTop = messages.scrollHeight;
+
+  function addMessage(text, isUser) {
+    const div = document.createElement('div');
+    div.className = `flex ${isUser ? 'justify-end' : 'justify-start'} animate-fade-in`;
+    div.innerHTML = `
+      <div class="${isUser ? 'bg-cyan-900 text-white' : 'bg-neutral-800 text-neutral-300'} rounded-2xl ${isUser ? 'rounded-tr-none' : 'rounded-tl-none'} px-4 py-3 text-sm max-w-[85%] shadow-sm leading-relaxed">
+        ${text}
+      </div>
+    `;
+    messages.appendChild(div);
+    scrollToBottom();
+  }
+
+  chatForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const text = userInput.value.trim();
+    if (!text) return;
+
+    addMessage(text, true);
+    userInput.value = '';
+    userInput.disabled = true;
+    submitBtn.disabled = true;
+
+    avatarPulse.classList.add('animate-ping', 'opacity-75');
+
+    try {
+      const response = await fetch(OFFICER_API_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: text, threadId: threadId })
+      });
+
+      const data = await response.json();
+      
+      if (data.threadId) {
+        threadId = data.threadId;
+        sessionStorage.setItem('mya_thread_id', threadId);
+      }
+
+      if (data.response) {
+        addMessage(data.response, false);
+      } else {
+        addMessage("Signal interference. Please retry.", false);
+      }
+
+    } catch (err) {
+      addMessage("Connection lost. Mya is offline.", false);
+      console.error(err);
+    } finally {
+      avatarPulse.classList.remove('animate-ping', 'opacity-75');
+      userInput.disabled = false;
+      submitBtn.disabled = false;
+      userInput.focus();
+    }
+  });
+</script>
+
+<style>
+  .animate-fade-in { animation: fadeIn 0.3s ease-in-out; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+</style>
