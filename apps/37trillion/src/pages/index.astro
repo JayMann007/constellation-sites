@@ -7,13 +7,29 @@ const { seo, hero, sections } = home;
 ---
 
 <BaseLayout title={seo.title} description={seo.description}>
+  <!-- Sticky Top Bar (single line) -->
+  <div class="sticky top-0 z-50 bg-neutral-950/70 backdrop-blur border-b border-neutral-900">
+    <div class="mx-auto max-w-6xl px-6 py-4 relative flex items-center justify-center">
+      <!-- Centered "building sign" logo -->
+      <a href="/" aria-label="37 Trillion Home" class="flex items-center justify-center">
+        <img
+          src="/brand/37t.svg"
+          alt="37 Trillion"
+          class="h-12 md:h-16 w-auto opacity-95 hover:opacity-100 transition"
+          loading="eager"
+        />
+      </a>
+    </div>
+  </div>
+
+  <!-- Hero -->
   <header class="border-b border-neutral-900">
     <div class="mx-auto max-w-6xl px-6 py-16">
       <div class="max-w-3xl">
         <p class="text-xs uppercase tracking-widest text-neutral-400">37TRILLION.ORG</p>
 
-        <h1 class="mt-4 text-4xl md:text-6xl font-semibold leading-tight">
-          {hero.title}
+        <h1 class="mt-4 text-3xl md:text-5xl font-semibold leading-tight">
+		{hero.title}
         </h1>
 
         <p class="mt-6 text-lg md:text-xl text-neutral-300">
