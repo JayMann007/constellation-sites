@@ -1,0 +1,73 @@
+---
+const {
+  ctaHref = "/#start",
+  ctaLabel = "Start here",
+  showCta = true,
+} = Astro.props;
+---
+
+<header class="sticky top-0 z-50 border-b border-neutral-900 bg-neutral-950/70 backdrop-blur">
+  <div class="mx-auto max-w-6xl px-6 py-4 flex items-center justify-between gap-4">
+    <!-- Left: Logo -->
+    <a href="/" class="flex items-center no-underline">
+      <img
+        src="/brand/37t.svg"
+        alt="37 Trillion"
+        class="h-10 md:h-11 w-auto opacity-95 hover:opacity-100 transition"
+        loading="eager"
+      />
+    </a>
+
+    <!-- Center: Desktop Nav -->
+    <nav class="hidden md:flex items-center gap-6 text-sm text-neutral-200">
+      <a href="/unity-of-one" class="hover:text-white transition">Unity of One</a>
+      <a href="/lightos" class="hover:text-white transition">LightOS</a>
+      <a href="/glc" class="hover:text-white transition">The GLC</a>
+    </nav>
+
+    <!-- Right: CTA + Mobile Menu -->
+    <div class="flex items-center gap-3">
+      {showCta && (
+        <a
+          href={ctaHref}
+          class="hidden sm:inline-flex items-center justify-center rounded-2xl border border-neutral-700 px-4 py-2 text-xs text-neutral-100 hover:border-neutral-500 transition"
+        >
+          {ctaLabel}
+        </a>
+      )}
+
+      <!-- Mobile menu -->
+      <details class="md:hidden relative">
+        <summary
+          class="list-none cursor-pointer rounded-2xl border border-neutral-800 bg-neutral-950/50 px-3 py-2 text-xs text-neutral-100 hover:bg-neutral-900/60 transition"
+          aria-label="Open menu"
+        >
+          Menu
+        </summary>
+
+        <div class="absolute right-0 mt-2 w-56 rounded-2xl border border-neutral-800 bg-neutral-950 shadow-xl overflow-hidden">
+          <div class="p-2 flex flex-col">
+            <a href="/unity-of-one" class="rounded-xl px-3 py-2 text-sm text-neutral-200 hover:bg-neutral-900 hover:text-white transition">
+              Unity of One
+            </a>
+            <a href="/lightos" class="rounded-xl px-3 py-2 text-sm text-neutral-200 hover:bg-neutral-900 hover:text-white transition">
+              LightOS
+            </a>
+            <a href="/glc" class="rounded-xl px-3 py-2 text-sm text-neutral-200 hover:bg-neutral-900 hover:text-white transition">
+              The GLC
+            </a>
+
+            {showCta && (
+              <a
+                href={ctaHref}
+                class="mt-2 rounded-xl px-3 py-2 text-sm text-neutral-100 border border-neutral-700 hover:border-neutral-500 transition"
+              >
+                {ctaLabel}
+              </a>
+            )}
+          </div>
+        </div>
+      </details>
+    </div>
+  </div>
+</header>

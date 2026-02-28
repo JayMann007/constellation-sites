@@ -1,8 +1,15 @@
 ---
-import OfficerChat from '../components/OfficerChat.astro';
+import OfficerChat from "../components/OfficerChat.astro";
+import GlobalNav from "../components/GlobalNav.astro";
 import "../styles/global.css";
 
-const { title = "37 Trillion", description = "Community of One" } = Astro.props;
+const {
+  title = "37 Trillion",
+  description = "Community of One",
+  showNavCta = true,
+  navCtaHref = "/#start",
+  navCtaLabel = "Start here",
+} = Astro.props;
 ---
 
 <!doctype html>
@@ -15,9 +22,12 @@ const { title = "37 Trillion", description = "Community of One" } = Astro.props;
   </head>
 
   <body class="bg-neutral-950 text-neutral-100 antialiased">
+    <GlobalNav ctaHref={navCtaHref} ctaLabel={navCtaLabel} showCta={showNavCta} />
+
     <main class="min-h-screen">
       <slot />
     </main>
-	<OfficerChat />
+
+    <OfficerChat />
   </body>
 </html>

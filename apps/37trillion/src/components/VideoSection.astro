@@ -7,6 +7,10 @@ interface Props {
   blurb: string;
   provider: Provider;
   videoIdOrUrl: string;
+
+  // For Cloudflare Stream, e.g. "6s" or "00:00:06"
+  posterTime?: string;
+
   layout?: "video-left" | "video-right" | "stacked";
   cta?: { label: string; href: string };
 }
@@ -17,6 +21,7 @@ const {
   blurb,
   provider,
   videoIdOrUrl,
+  posterTime,
   layout = "video-right",
   cta
 } = Astro.props as Props;
@@ -24,9 +29,34 @@ const {
 const isLeft = layout === "video-left";
 const isStacked = layout === "stacked";
 
+/**
+ * Cloudflare Stream embed:
+ * iframe: https://iframe.videodelivery.net/<id>
+ *
+ * To set a custom poster frame, Cloudflare expects:
+ * ?poster=<ENCODED_URL_TO_IMAGE>
+ *
+ * We generate that image URL using the timestamp:
+ * https://videodelivery.net/<id>/thumbnails/thumbnail.jpg?time=6s
+ */
+function buildCloudflareEmbed(videoId: string, posterTime?: string) {
+  const base = `https://iframe.videodelivery.net/${videoId}`;
+  if (!posterTime) return base;
+
+  const posterUrl = `https://videodelivery.net/${videoId}/thumbnails/thumbnail.jpg?time=${encodeURIComponent(
+    posterTime
+  )}`;
+
+  const params = new URLSearchParams();
+  // poster must be a URL (Cloudflare requirement)
+  params.set("poster", posterUrl);
+
+  return `${base}?${params.toString()}`;
+}
+
 const videoEmbed =
   provider === "cloudflare"
-    ? `https://iframe.videodelivery.net/${videoIdOrUrl}`
+    ? buildCloudflareEmbed(videoIdOrUrl, posterTime)
     : provider === "youtube"
       ? `https://www.youtube.com/embed/${videoIdOrUrl}`
       : `https://player.vimeo.com/video/${videoIdOrUrl}`;
@@ -37,9 +67,11 @@ const videoEmbed =
     <div class={`grid gap-10 ${isStacked ? "" : "md:grid-cols-2"} items-center`}>
       <div class={`${!isStacked && isLeft ? "md:order-2" : ""}`}>
         {eyebrow && <div class="text-xs uppercase tracking-widest text-neutral-400">{eyebrow}</div>}
+
         <h2 class="mt-3 text-3xl md:text-4xl font-semibold leading-tight">
           {title}
         </h2>
+
         <p class="mt-4 text-lg text-neutral-300 leading-relaxed">
           {blurb}
         </p>
